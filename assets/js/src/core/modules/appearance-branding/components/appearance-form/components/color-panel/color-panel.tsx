@@ -16,21 +16,20 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { isObject, has } from 'lodash'
 
-export const ColorPanel = (): React.JSX.Element => {
-  const { t } = useTranslation()
-  const form = Form.useFormInstance()
-
-  const formatColor = (color: any): string => {
-    if (isObject(color) && has(color, 'cleared') && color.cleared === true) {
-      return ''
-    }
-
-    if (isObject(color)) {
-      return (color as any).toHexString()
-    }
-
+const formatColor = (color: any): string => {
+  if (isObject(color) && has(color, 'cleared') && color.cleared === true) {
     return ''
   }
+
+  if (isObject(color)) {
+    return (color as any).toHexString()
+  }
+
+  return ''
+}
+
+export const ColorPanel = (): React.JSX.Element => {
+  const { t } = useTranslation()
 
   return (
     <Panel
@@ -47,17 +46,14 @@ export const ColorPanel = (): React.JSX.Element => {
       >
         <Form.Item label={ t('appearance-branding.color.brand-color.label') }>
           <Form.Item
+            getValueFromEvent={ formatColor }
             name={ ['branding', 'brandColor'] }
             noStyle
           >
             <ColorPicker
               allowClear
               data-testid="appearance-branding-brand-color"
-              format="hex"
-              onChange={ (color) => {
-                const hexValue = formatColor(color)
-                form.setFieldValue(['branding', 'brandColor'], hexValue)
-              } }
+              defaultFormat="hex"
               showText
             />
           </Form.Item>
@@ -68,17 +64,14 @@ export const ColorPanel = (): React.JSX.Element => {
 
         <Form.Item label={ t('appearance-branding.color.background-shade.label') }>
           <Form.Item
+            getValueFromEvent={ formatColor }
             name={ ['branding', 'backgroundShade'] }
             noStyle
           >
             <ColorPicker
               allowClear
               data-testid="appearance-branding-background-shade"
-              format="hex"
-              onChange={ (color) => {
-                const hexValue = formatColor(color)
-                form.setFieldValue(['branding', 'backgroundShade'], hexValue)
-              } }
+              defaultFormat="hex"
               showText
             />
           </Form.Item>

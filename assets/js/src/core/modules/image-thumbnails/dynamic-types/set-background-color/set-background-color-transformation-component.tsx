@@ -12,7 +12,17 @@ import React from 'react'
 import { Flex } from '@Pimcore/components/flex/flex'
 import { Form } from '@Pimcore/components/form/form'
 import { ColorPicker } from '@Pimcore/components/color-picker/color-picker'
+import type { Color } from 'antd/es/color-picker'
 import type { TransformationComponent } from '../../types/transformation-component-types'
+
+const formatColor = (color: Color | string | null | undefined): string => {
+  if (color === null || color === undefined) return ''
+  if (typeof color === 'string') return color
+  if (typeof (color as Color).toHexString === 'function') {
+    return (color as Color).cleared ? '' : (color as Color).toHexString()
+  }
+  return ''
+}
 
 export const SetBackgroundColorTransformationComponent: TransformationComponent = () => {
   return (
@@ -21,12 +31,13 @@ export const SetBackgroundColorTransformationComponent: TransformationComponent 
       vertical
     >
       <Form.Item
+        getValueFromEvent={ formatColor }
         initialValue="#ffffff"
         label="Background Color"
         name="color"
       >
         <ColorPicker
-          format="hex"
+          defaultFormat="hex"
           showText
         />
       </Form.Item>
